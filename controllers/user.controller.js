@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { BadRequest } from "../errors/exceptions.js";
 import User from "../model/user.model.js";
-import { getPayload } from "../util/google-client.js";
+import { getPayloadFromGoogle } from "../util/google-client.js";
 
 export const authenticateUser = async (req, res) => {
   const { credential } = req.body;
@@ -16,7 +16,7 @@ export const authenticateUser = async (req, res) => {
     name,
     email,
     picture: image,
-  } = getPayload(credential);
+  } = await getPayloadFromGoogle(credential);
 
   let statusCode = StatusCodes.OK;
   let user = await User.findOne({ email });
@@ -27,7 +27,7 @@ export const authenticateUser = async (req, res) => {
   const token = user.generateToken();
   //   const maxAge = 24 * 60 * 60 * 1000;
   //   res.cookie("jwt", token, { maxAge, httpOnly: true });
-  res.status(statusCode).json({ name, email, image, token });
+  res.status(statusCode).json({ ...user, token });
 };
 
 export const currentUserInfo = async (req, res) => {
