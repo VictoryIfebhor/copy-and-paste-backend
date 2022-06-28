@@ -8,7 +8,9 @@ import morgan from "morgan";
 import { connectDB } from "./db/connect.js";
 import { errorHandlerMIddleware } from "./middlewares/error-handler.js";
 import { notFoundMiddleware } from "./middlewares/not-found.js";
+
 import userRouter from "./routers/user.router.js";
+import itemsRouter from "./routers/item.router.js";
 
 const app = express();
 
@@ -26,8 +28,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get("/", (req, res) => res.send("Connected"));
-app.use("/api", userRouter);
+const base = "/api/v1";
+
+app.get(`${base}`, (req, res) => res.send("Connected"));
+app.use(`${base}/users`, userRouter);
+app.use(`${base}/items`, itemsRouter);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMIddleware);
