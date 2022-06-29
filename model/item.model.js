@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { BadRequest } from "../errors/exceptions";
-import User from "./user.model";
+import { BadRequest } from "../errors/exceptions.js";
+import User from "./user.model.js";
 
 const ItemSchema = new mongoose.Schema({
   user: {
