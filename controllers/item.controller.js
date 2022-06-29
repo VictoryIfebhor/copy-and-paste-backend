@@ -22,7 +22,7 @@ export const removeItem = async (req, res) => {
   if (!item) {
     throw new NotFound("No such item exists for this user");
   }
-  res.status(StatusCodes.NO_CONTENT);
+  res.sendStatus(StatusCodes.NO_CONTENT);
 };
 
 export const editItem = async (req, res) => {
