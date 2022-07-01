@@ -3,22 +3,23 @@ import { NotFound } from "../errors/exceptions.js";
 import Item from "../model/item.model.js";
 
 export const getAllItems = async (req, res) => {
-  const { _id } = req.user;
-  const users = await Item.find({ user: _id });
-  res.status(StatusCodes.OK).json({ users });
+  const { id } = req.user;
+  const items = await Item.find({ user: id });
+  res.status(StatusCodes.OK).json({ items });
 };
 
 export const addItem = async (req, res) => {
-  const { _id } = req.user;
+  const { id: user } = req.user;
   const { title, content } = req.body;
-  const item = await Item.create({ title, content, user: _id });
+  console.log(req.user);
+  const item = await Item.create({ title, content, user });
   res.status(StatusCodes.CREATED).json({ item });
 };
 
 export const removeItem = async (req, res) => {
-  const { _id } = req.user;
-  const { id } = req.params;
-  const item = await Item.findOneAndDelete({ _id: id, user: _id });
+  const { id: user } = req.user;
+  const { id: _id } = req.params;
+  const item = await Item.findOneAndDelete({ _id, user });
   if (!item) {
     throw new NotFound("No such item exists for this user");
   }
@@ -26,11 +27,11 @@ export const removeItem = async (req, res) => {
 };
 
 export const editItem = async (req, res) => {
-  const { _id } = req.user;
-  const { id } = req.params;
+  const { id: user } = req.user;
+  const { id: _id } = req.params;
   const { title, content } = req.body;
   const item = await Item.findOneAndUpdate(
-    { _id: id, user: _id },
+    { _id, user },
     { title, content },
     { new: true, runValidators: true }
   );

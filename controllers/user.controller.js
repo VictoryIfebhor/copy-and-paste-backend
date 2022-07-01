@@ -31,6 +31,7 @@ export const authenticateUser = async (req, res) => {
 };
 
 export const currentUserInfo = async (req, res) => {
-  const user = await User.findOne({ email: req.user.email }).populate("items");
+  const { id } = req.user;
+  const user = await User.findById(id).populate("items");
   res.status(StatusCodes.OK).json({ user });
 };
