@@ -6,8 +6,8 @@ export const authMiddleware = async (req, res, next) => {
     const { authorization } = req.headers;
     const [_, token] = authorization.split(" ");
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    const { name, email, image } = payload;
-    req.user = { name, email, image };
+    const { name, email, image, id } = payload;
+    req.user = { name, email, image, id };
   } catch (error) {
     throw new Unauthenticated("Could not authenticate user");
   }
