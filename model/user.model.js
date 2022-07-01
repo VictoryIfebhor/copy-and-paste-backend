@@ -25,6 +25,7 @@ UserSchema.virtual("items", {
   localField: "_id",
   foreignField: "user",
   justOne: false,
+  options: { sort: "-createdAt" },
 });
 
 UserSchema.pre("remove", async function (next) {
@@ -33,9 +34,13 @@ UserSchema.pre("remove", async function (next) {
 });
 
 UserSchema.methods.generateToken = function () {
-  return jwt.sign({ sub: this.email }, process.env.JWT_SECRET, {
-    expiresIn: "24h",
-  });
+  return jwt.sign(
+    { id: this._id, email: this.email, name: this.name, image: this.image },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "24h",
+    }
+  );
 };
 
 export default mongoose.model("User", UserSchema);
