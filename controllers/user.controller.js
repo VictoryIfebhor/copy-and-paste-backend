@@ -27,7 +27,7 @@ export const authenticateUser = async (req, res) => {
   const token = user.generateToken();
   //   const maxAge = 24 * 60 * 60 * 1000;
   //   res.cookie("jwt", token, { maxAge, httpOnly: true });
-  res.status(statusCode).json({ ...user, token });
+  res.status(statusCode).json({ token });
 };
 
 export const currentUserInfo = async (req, res) => {
