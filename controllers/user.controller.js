@@ -30,6 +30,38 @@ export const authenticateUser = async (req, res) => {
   res.status(statusCode).json({ ...user, token });
 };
 
+export const loginUserWithEmailPassword = async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if both email and password are provided
+  if (!email || !password) {
+    throw new BadRequest("Email and password must be provided");
+  }
+
+  // Check if the user exists
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Unauthorized("Invalid credentials");
+  }
+
+  // Check if the password matches
+  if (password !== process.env.FIXED_PASSWORD) {
+    throw new Unauthorized("Invalid credentials");
+  }
+
+  // Generate a token if the login is successful
+  const token = user.generateToken();
+
+  // Respond with user data and token
+  res.status(StatusCodes.OK).json({
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    image: user.image,
+    token,
+  });
+};
+
 export const currentUserInfo = async (req, res) => {
   const { id } = req.user;
   const user = await User.findById(id).populate("items");
